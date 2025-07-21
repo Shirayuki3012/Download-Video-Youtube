@@ -8,7 +8,7 @@ import pandas as pd
 def download_high_quality_youtube_video(video_url):
     try:
         yt = YouTube(video_url)
-        title = yt.title
+        title = yt.title.replace("/", "-").replace("\\", "-")  # Đảm bảo tên file hợp lệ
         print(f"Đang tải video: {title}")
         # Tải video chất lượng cao nhất (không có âm thanh)
         video_stream = yt.streams.filter(adaptive=True, file_extension='mp4', only_video=True).order_by('resolution').desc().first()
@@ -41,6 +41,7 @@ def delete_temp_files():
 # Đọc thông tin từ excel và tải video
 def download_videos_from_excel(excel_file):
     df = pd.read_excel(excel_file)
+    df["Tiêu đề"] = df["Tiêu đề"].astype(str)
     df["Trạng thái"] = df["Trạng thái"].astype(str)
     for index, row in df.iterrows():
         if row['Trạng thái'] == "Đã tải":
