@@ -8,7 +8,7 @@ import pandas as pd
 def download_high_quality_youtube_video(video_url):
     try:
         yt = YouTube(video_url)
-        title = yt.title.replace("/", "-").replace("\\", "-")  # Đảm bảo tên file hợp lệ
+        title = yt.title.replace("/", "-").replace("\\", "-").replace(":", "-").replace("*", "-").replace("?", "-").replace('"', '-').replace('<', '-').replace('>', '-').replace('|', '-')
         print(f"Đang tải video: {title}")
         # Tải video chất lượng cao nhất (không có âm thanh)
         video_stream = yt.streams.filter(adaptive=True, file_extension='mp4', only_video=True).order_by('resolution').desc().first()
@@ -28,6 +28,10 @@ def download_high_quality_youtube_video(video_url):
         # Lưu video đã ghép
         final_clip.write_videofile(output_filename, codec="libx264", audio_codec="aac")
         print(f"✅ Đã tải video: '{title}' và lưu vào '{output_filename}'")
+        # Giải phóng tài nguyên
+        video_clip.close()
+        audio_clip.close()
+        final_clip.close()
     except Exception as e:
         print(f"❌ Lỗi xảy ra: {e}")
     return output_filename

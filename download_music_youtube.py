@@ -7,7 +7,7 @@ import pandas as pd
 def download_high_quality_youtube_video(video_url):
     try:
         yt = YouTube(video_url)
-        title = yt.title.replace("/", "-").replace("\\", "-")  # Đảm bảo tên file hợp lệ
+        title = yt.title.replace("/", "-").replace("\\", "-").replace(":", "-").replace("?", "-").replace("*", "-").replace('"', '-').replace('<', '-').replace('>', '-').replace('|', '-')
         print(f"Đang tải âm nhạc: {title}")
         # Đặt tên file đầu ra
         output_filename = f"{title}.mp4"
@@ -24,6 +24,7 @@ def download_high_quality_youtube_video(video_url):
         audio_clip.close()
 
         print(f"✅ Đã tải âm nhạc: '{title}' và lưu vào '{output_filename}'")
+        audio_clip.close()
     except Exception as e:
         print(f"❌ Lỗi xảy ra: {e}")
     return output_filename
